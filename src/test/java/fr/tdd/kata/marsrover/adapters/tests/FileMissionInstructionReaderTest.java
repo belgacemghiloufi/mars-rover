@@ -60,11 +60,15 @@ public class FileMissionInstructionReaderTest {
 	@Test
 	public void
 	should_return_list_of_missions() throws Exception {
-		Rover rover_1 = new Rover(GRID, new Coordinate(1, 2), Direction.NORTH);
+		Coordinate rover_1_initial_position = new Coordinate(1, 2);
+		Coordinate rover_2_initial_position = new Coordinate(3, 3);
 		String mission_instructions_1 = "LMLMLMLMM";
-		Rover rover_2 = new Rover(GRID, new Coordinate(3, 3), Direction.EAST);
 		String mission_instructions_2 = "MMRMMRMRRM";
-		List<Mission> missions = List.of(new Mission(rover_1, mission_instructions_1), new Mission(rover_2, mission_instructions_2));
+		Rover rover_1 = new Rover(GRID, rover_1_initial_position, Direction.NORTH);
+		Rover rover_2 = new Rover(GRID, rover_2_initial_position, Direction.EAST);
+		Mission mission_1 = new Mission(rover_1, mission_instructions_1);
+		Mission mission_2 = new Mission(rover_2, mission_instructions_2);
+		List<Mission> missions = List.of(mission_1, mission_2);
 		assertThat(missionInstructionReader.getMissions(FILE_LOCATION), is(missions));
 	}
 

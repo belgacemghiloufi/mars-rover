@@ -36,11 +36,15 @@ public class MissionControlTest {
 	public void
 	should_run_mission_in_order() throws Exception {
 		String missionsResult = String.join(System.getProperty("line.separator"), "1 3 N", "5 1 E");
-		Rover rover_1 = new Rover(GRID, new Coordinate(1, 2), Direction.NORTH);
 		String mission_instructions_1 = "LMLMLMLMM";
-		Rover rover_2 = new Rover(GRID, new Coordinate(3, 3), Direction.EAST);
 		String mission_instructions_2 = "MMRMMRMRRM";
-		List<Mission> missions = List.of(new Mission(rover_1, mission_instructions_1), new Mission(rover_2, mission_instructions_2));
+		Coordinate rover_1_initial_position = new Coordinate(1, 2);
+		Rover rover_1 = new Rover(GRID, rover_1_initial_position, Direction.NORTH);
+		Coordinate rover_2_initial_position = new Coordinate(3, 3);
+		Rover rover_2 = new Rover(GRID, rover_2_initial_position, Direction.EAST);
+		Mission mission_1 = new Mission(rover_1, mission_instructions_1);
+		Mission mission_2 = new Mission(rover_2, mission_instructions_2);
+		List<Mission> missions = List.of(mission_1, mission_2);
 		when(missionInstructionReader.getMissions(FILE_LOCATION)).thenReturn(missions);
 		assertEquals(missionsResult, missionControl.startMissions(FILE_LOCATION));
 	}

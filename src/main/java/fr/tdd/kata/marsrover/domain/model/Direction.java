@@ -30,18 +30,19 @@ public enum Direction {
 
 	Direction directionMatching(String value) {
 		return Stream.of(values())
-				   .filter(direction -> direction.value == value)
-				   .findFirst()
-				   .get();
+				.filter(direction -> direction.value == value)
+				.findFirst()
+				.get();
 	}
 	
 	public static Direction of(String value) {
-		for(Direction direction: values()) {
-			if(direction.value.equals(value)) {
-				return direction;
+		Direction result = null;
+		for (Direction direction : values()) {
+			if (direction.value.equals(value)) {
+				result = direction;
 			}
 		}
-		return null;
+		return result;
 	}
 
 }

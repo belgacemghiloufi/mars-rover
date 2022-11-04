@@ -15,7 +15,7 @@ public class MissionControl {
 	public String startMissions(String fileLocation) throws Exception {
 		final StringBuilder result = new StringBuilder();
 		String newLine = System.getProperty("line.separator");
-		List<Mission> missions = missionInstructionReader.getMissions(fileLocation);
+		final List<Mission> missions = missionInstructionReader.getMissions(fileLocation);
 		for (int index = 0; index < missions.size(); index++) {
 			if (index != 0) {
 				result.append(newLine);
