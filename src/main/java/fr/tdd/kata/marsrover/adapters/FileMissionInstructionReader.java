@@ -19,9 +19,18 @@ import fr.tdd.kata.marsrover.domain.ports.MissionInstructionReader;
 
 public class FileMissionInstructionReader implements MissionInstructionReader {
 
-	private static final int GRID_PARAMETER_COUNT = 2;
-	private static final int MISSION_PARAMETER_COUNT = 2;
-	private static final String SPACE_DELIMITER = " ";
+	public static final int GRID_PARAMETER_COUNT = 2;
+	public static final int MISSION_PARAMETER_COUNT = 2;
+	public static final String SPACE_DELIMITER = " ";
+	private final FileMissionInstructionValidator instructionValidator;
+	
+	public FileMissionInstructionReader() {
+		this.instructionValidator = new FileMissionInstructionValidator();
+	}
+
+	public FileMissionInstructionReader(FileMissionInstructionValidator instructionValidator) {
+		this.instructionValidator = instructionValidator;
+	}
 
 	@Override
 	public String getMissionInstructions(String fileLocation) throws Exception {
@@ -46,6 +55,9 @@ public class FileMissionInstructionReader implements MissionInstructionReader {
 
 	@Override
 	public List<Mission> getMissions(String fileLocation) throws Exception {
+		
+		instructionValidator.validateMissionInstructions(getMissionInstructions(fileLocation), fileLocation);
+		
 		final Grid grid = getGrid(fileLocation);
 		final int firstLine = 1;
 		List<String> instructions = Files.lines(Paths.get(fileLocation))
@@ -77,7 +89,7 @@ public class FileMissionInstructionReader implements MissionInstructionReader {
 					return mission;};
 	}
 	
-	private List<List<String>> partition(List<String> list, int chunkSize) {
+	public static List<List<String>> partition(List<String> list, int chunkSize) {
 		List<List<String>> result = new ArrayList<>();
 		for (int index = 0; index < list.size(); index += chunkSize) {
 			result.add(list.subList(index, Math.min(index + chunkSize, list.size())));

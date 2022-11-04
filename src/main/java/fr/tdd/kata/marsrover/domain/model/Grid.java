@@ -29,6 +29,14 @@ public class Grid {
 		return new Coordinate(xPos, yPos);
 	}
 
+	public int getMaxWidth() {
+		return maxWidth;
+	}
+
+	public int getMaxHeight() {
+		return maxHeight;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
