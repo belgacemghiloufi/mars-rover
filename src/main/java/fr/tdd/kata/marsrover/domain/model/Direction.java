@@ -34,5 +34,14 @@ public enum Direction {
 				   .findFirst()
 				   .get();
 	}
+	
+	public static Direction of(String value) {
+		for(Direction direction: values()) {
+			if(direction.value.equals(value)) {
+				return direction;
+			}
+		}
+		return null;
+	}
 
 }
