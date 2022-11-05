@@ -55,29 +55,40 @@ public class FileMissionInstructionValidator {
 	public void validateMissionInstructions(String instructions, String fileLocation) throws Exception {
 		if((instructions == null) || (instructions.isEmpty()))
 			throw new IllegalArgumentException(String.format("invalid mission instructions: %s", instructions));
-		String gridSizeLine = instructions.lines()
-						  .filter(line -> !line.isEmpty())
-						  .findFirst()
-						  .get();
+		String gridSizeLine = getFirstLine(instructions);
 		validateGridSize(gridSizeLine);
 		final Grid grid = new FileMissionInstructionReader().getGrid(fileLocation);
 		int firstLine = 1;
-		List<String> instructionsAsList = instructions.lines()
-																		  .filter(line -> !line.isEmpty())
-																		  .skip(firstLine)
-																		  .collect(Collectors.toList());
+		List<String> instructionsAsList = getInstructionAsList(instructions, firstLine);
 		if(instructionsAsList.size() % MISSION_PARAMETER_COUNT != 0)
 			throw new IllegalArgumentException(String.format("invalid mission instructions: %s unable to distribute instruction over rovers", instructions));
-		
-		Consumer<List<String>> missionValidator = list -> {
-																			 String maxWidth = String.valueOf(grid.getMaxWidth());
-																			 String maxHeight = String.valueOf(grid.getMaxHeight());
-																			 String position = list.get(0);
-																			 validatePosition(position, maxWidth, maxHeight);
-																			 String commands = list.get(1);
-																			validateCommands(commands);};
-		FileMissionInstructionReader.partition(instructionsAsList, MISSION_PARAMETER_COUNT)
-												    .forEach(missionValidator);
+		Consumer<List<String>> missionValidator = missionValidator(grid);
+		FileMissionInstructionReader.partition(instructionsAsList, MISSION_PARAMETER_COUNT).forEach(missionValidator);
+	}
+
+	private String getFirstLine(String instructions) {
+		return instructions.lines()
+						  .filter(line -> !line.isEmpty())
+						  .findFirst()
+						  .get();
+	}
+
+	private List<String> getInstructionAsList(String instructions, int firstLine) {
+		return instructions.lines()
+									 .filter(line -> !line.isEmpty())
+									 .skip(firstLine)
+									 .collect(Collectors.toList());
+	}
+
+	private Consumer<List<String>> missionValidator(final Grid grid) {
+		return list -> {
+			String maxWidth = String.valueOf(grid.getMaxWidth());
+			String maxHeight = String.valueOf(grid.getMaxHeight());
+			String position = list.get(0);
+			validatePosition(position, maxWidth, maxHeight);
+			String commands = list.get(1);
+			validateCommands(commands);
+		};
 	}
 
 	public void validateGridSize(String gridSizeLine) {
